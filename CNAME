@@ -1,1 +1,1 @@
-echo "www.foodioso.com" > CNAME
+echo "foodioso.com" > CNAME
