@@ -1,7 +1,7 @@
 ---
 title: ' 1.Paellista'
 date: 2024-07-01 00:00:00
-description: Board is a stylish full-width masonry grid theme. Made for designers, artists, photographers and developers to show off their best work.
+description: First post about my favourite dish
 featured_image: '/images/demo/spain.jpg'
 ---
 
