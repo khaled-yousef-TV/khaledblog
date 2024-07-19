@@ -21,5 +21,5 @@ featured_image: '/images/demo/austria.jpg'
 
  This was an amazing weekend and served again as a reminder that how often I try to plan and scheme, it's so relieving knowing that there's this sense of unpredictability where things can turn to the better or to the worse any second, this adds so much more to life and spices it up, this is it for this time anticipate the next meal post soonish.
 
-![](/images/demo/Burger.jpg)
+![](/images/demo/A_delicious_gourmet_burger_served_on_a_blue_cerami.jpg)
 
