@@ -2,7 +2,7 @@
 title: ' 1.Paellista'
 date: 2024-07-01 00:00:00
 description: First post about my favourite dish
-featured_image: '/images/demo/spain.jpg'
+featured_image: '/images/demo/madrid.jpg'
 ---
 
 ## I wish I got caught in tourist traps more often
