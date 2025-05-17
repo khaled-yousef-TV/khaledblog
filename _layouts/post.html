@@ -1,20 +1,568 @@
----
-layout: default
----
-
-<section class="intro">
-
-	<div class="wrap">
-
-		<h1>{{ page.title }}</h1>
-		<p>{{ page.date | date_to_long_string }}</p>
-
-	</div>
-
-</section>
-
-<section class="single">
-
-	{{ page.content }}
-
-</section>
+<!-- Enhanced Post Layout with Animation and Color -->
+<!-- _layouts/post.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% include head.html %}
+  <style>
+    /* Custom Post Layout Styling */
+    :root {
+      --primary-color: #ff6b6b;
+      --secondary-color: #4ecdc4;
+      --accent-color: #ffd166;
+      --text-color: #2d334a;
+      --background-color: #f8f9fa;
+      --card-background: #ffffff;
+      --animation-speed: 0.5s;
+    }
+    
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      font-family: 'Open Sans', sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .post-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      animation: fadeIn var(--animation-speed) ease-in;
+    }
+    
+    .post-card {
+      background-color: var(--card-background);
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .post-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+    
+    .post-header {
+      position: relative;
+      padding: 30px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+    }
+    
+    .post-featured-image {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      border-bottom: 3px solid var(--accent-color);
+      opacity: 0;
+      animation: imageReveal 0.8s ease forwards;
+      animation-delay: 0.2s;
+    }
+    
+    .post-title {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, #fff, var(--accent-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideUp 0.6s ease forwards;
+    }
+    
+    .post-meta {
+      margin-top: 15px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 0.9rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideUp 0.6s ease forwards;
+      animation-delay: 0.1s;
+    }
+    
+    .post-meta > * {
+      margin-right: 15px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .post-meta svg {
+      margin-right: 5px;
+    }
+    
+    .post-meta a {
+      color: white;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(255, 255, 255, 0.6);
+      transition: border-color 0.3s;
+    }
+    
+    .post-meta a:hover {
+      border-color: white;
+    }
+    
+    .post-content {
+      padding: 30px;
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeIn 0.8s ease forwards;
+      animation-delay: 0.4s;
+    }
+    
+    .post-content img {
+      max-width: 100%;
+      border-radius: 6px;
+      margin: 25px 0;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    
+    .post-content img:hover {
+      transform: scale(1.02);
+    }
+    
+    .post-content p:first-of-type::first-letter {
+      font-size: 3.5em;
+      line-height: 0.8;
+      float: left;
+      margin-right: 8px;
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+    
+    .post-tags {
+      padding: 20px 30px;
+      border-top: 1px solid rgba(0, 0, 0, 0.07);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards;
+      animation-delay: 0.6s;
+    }
+    
+    .tag {
+      display: inline-block;
+      padding: 6px 12px;
+      background-color: rgba(var(--secondary-color-rgb), 0.1);
+      color: var(--secondary-color);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .tag:hover {
+      background-color: var(--secondary-color);
+      color: white;
+      transform: translateY(-3px);
+    }
+    
+    .post-navigation {
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards;
+      animation-delay: 0.8s;
+    }
+    
+    .post-navigation a {
+      padding: 15px 20px;
+      background-color: var(--card-background);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text-color);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    
+    .post-navigation a:hover {
+      background-color: var(--primary-color);
+      color: white;
+      transform: translateY(-3px);
+    }
+    
+    .post-navigation a.prev {
+      justify-content: flex-start;
+    }
+    
+    .post-navigation a.next {
+      justify-content: flex-end;
+      text-align: right;
+    }
+    
+    .post-navigation a svg {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .post-navigation a.prev svg {
+      margin-right: 10px;
+    }
+    
+    .post-navigation a.next svg {
+      margin-left: 10px;
+    }
+    
+    .related-posts {
+      margin-top: 60px;
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards;
+      animation-delay: 1s;
+    }
+    
+    .related-posts h3 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--accent-color);
+      display: inline-block;
+    }
+    
+    .related-posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    
+    .related-post-card {
+      background-color: var(--card-background);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+    
+    .related-post-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .related-post-image {
+      height: 150px;
+      width: 100%;
+      object-fit: cover;
+    }
+    
+    .related-post-content {
+      padding: 15px;
+    }
+    
+    .related-post-title {
+      font-size: 1.1rem;
+      margin: 0 0 10px 0;
+      line-height: 1.4;
+    }
+    
+    .related-post-title a {
+      color: var(--text-color);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .related-post-title a:hover {
+      color: var(--primary-color);
+    }
+    
+    .related-post-date {
+      font-size: 0.85rem;
+      color: #7a7a7a;
+    }
+    
+    .comments-section {
+      margin-top: 60px;
+      padding: 30px;
+      background-color: var(--card-background);
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards;
+      animation-delay: 1.2s;
+    }
+    
+    /* Animation Keyframes */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes imageReveal {
+      from { opacity: 0; transform: scale(1.05); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    /* Media Queries */
+    @media (max-width: 768px) {
+      .post-title {
+        font-size: 2rem;
+      }
+      
+      .post-navigation {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .post-header,
+      .post-content,
+      .post-tags {
+        padding: 20px;
+      }
+      
+      .post-title {
+        font-size: 1.7rem;
+      }
+      
+      .post-featured-image {
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  {% include header.html %}
+  
+  <main class="post-container">
+    <article class="post-card">
+      {% if page.image %}
+        <img src="{{ page.image | relative_url }}" alt="{{ page.title }}" class="post-featured-image">
+      {% endif %}
+      
+      <header class="post-header">
+        <h1 class="post-title">{{ page.title }}</h1>
+        <div class="post-meta">
+          <time datetime="{{ page.date | date_to_xmlschema }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            {{ page.date | date: "%B %-d, %Y" }}
+          </time>
+          
+          {% if page.author %}
+            <span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              {{ page.author }}
+            </span>
+          {% endif %}
+          
+          {% if page.categories.size > 0 %}
+            <span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+              {% for category in page.categories %}
+                <a href="/categories/{{ category | slugify }}/">{{ category }}</a>
+                {% unless forloop.last %}, {% endunless %}
+              {% endfor %}
+            </span>
+          {% endif %}
+          
+          {% if page.reading_time %}
+            <span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+              {{ page.reading_time }} min read
+            </span>
+          {% endif %}
+        </div>
+      </header>
+      
+      <div class="post-content">
+        {{ content }}
+      </div>
+      
+      {% if page.tags.size > 0 %}
+        <div class="post-tags">
+          {% for tag in page.tags %}
+            <a href="/tags/{{ tag | slugify }}/" class="tag">#{{ tag }}</a>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </article>
+    
+    <div class="post-navigation">
+      {% if page.previous.url %}
+        <a class="prev" href="{{ page.previous.url | relative_url }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          <div>
+            <span>Previous Post</span>
+            <h4>{{ page.previous.title }}</h4>
+          </div>
+        </a>
+      {% else %}
+        <div></div>
+      {% endif %}
+      
+      {% if page.next.url %}
+        <a class="next" href="{{ page.next.url | relative_url }}">
+          <div>
+            <span>Next Post</span>
+            <h4>{{ page.next.title }}</h4>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+      {% else %}
+        <div></div>
+      {% endif %}
+    </div>
+    
+    {% if site.related_posts.size > 0 %}
+    <div class="related-posts">
+      <h3>You May Also Enjoy</h3>
+      <div class="related-posts-grid">
+        {% for post in site.related_posts limit:3 %}
+          <div class="related-post-card">
+            {% if post.image %}
+              <img src="{{ post.image | relative_url }}" alt="{{ post.title }}" class="related-post-image">
+            {% endif %}
+            <div class="related-post-content">
+              <h3 class="related-post-title">
+                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+              </h3>
+              <time class="related-post-date" datetime="{{ post.date | date_to_xmlschema }}">
+                {{ post.date | date: "%B %-d, %Y" }}
+              </time>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    
+    {% if site.disqus.shortname and page.comments %}
+      <div class="comments-section">
+        {% include disqus_comments.html %}
+      </div>
+    {% endif %}
+  </main>
+  
+  {% include footer.html %}
+  
+  <script>
+    // Calculate reading time
+    document.addEventListener('DOMContentLoaded', function() {
+      const content = document.querySelector('.post-content');
+      if (content) {
+        const text = content.textContent;
+        const wordCount = text.split(/\s+/).length;
+        const readingTime = Math.ceil(wordCount / 200); // 200 words per minute
+        
+        // Create reading time element if it doesn't exist
+        if (!document.querySelector('.post-meta span:last-child')) {
+          const timeElement = document.createElement('span');
+          timeElement.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            ${readingTime} min read
+          `;
+          document.querySelector('.post-meta').appendChild(timeElement);
+        }
+      }
+    });
+    
+    // Animate images when they come into view
+    document.addEventListener('DOMContentLoaded', function() {
+      const images = document.querySelectorAll('.post-content img');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.animation = 'imageReveal 0.6s ease forwards';
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      
+      images.forEach(image => {
+        image.style.opacity = '0';
+        observer.observe(image);
+      });
+    });
+    
+    // Custom color scheme selector (optional enhancement)
+    const themes = {
+      default: {
+        primary: '#ff6b6b',
+        secondary: '#4ecdc4',
+        accent: '#ffd166'
+      },
+      ocean: {
+        primary: '#3498db',
+        secondary: '#2ecc71',
+        accent: '#f1c40f'
+      },
+      sunset: {
+        primary: '#e74c3c',
+        secondary: '#9b59b6',
+        accent: '#f39c12'
+      },
+      forest: {
+        primary: '#27ae60',
+        secondary: '#2980b9',
+        accent: '#f1c40f'
+      }
+    };
+    
+    // Uncomment this function if you want to add a theme selector to your posts
+    /*
+    function addThemeSelector() {
+      const selector = document.createElement('div');
+      selector.className = 'theme-selector';
+      selector.innerHTML = `
+        <div class="theme-toggle">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg>
+        </div>
+        <div class="theme-options">
+          <button data-theme="default">Default</button>
+          <button data-theme="ocean">Ocean</button>
+          <button data-theme="sunset">Sunset</button>
+          <button data-theme="forest">Forest</button>
+        </div>
+      `;
+      
+      document.body.appendChild(selector);
+      
+      // Toggle theme options visibility
+      selector.querySelector('.theme-toggle').addEventListener('click', () => {
+        selector.querySelector('.theme-options').classList.toggle('active');
+      });
+      
+      // Handle theme selection
+      selector.querySelectorAll('.theme-options button').forEach(button => {
+        button.addEventListener('click', () => {
+          const theme = themes[button.dataset.theme];
+          document.documentElement.style.setProperty('--primary-color', theme.primary);
+          document.documentElement.style.setProperty('--secondary-color', theme.secondary);
+          document.documentElement.style.setProperty('--accent-color', theme.accent);
+          
+          localStorage.setItem('postTheme', button.dataset.theme);
+          selector.querySelector('.theme-options').classList.remove('active');
+        });
+      });
+      
+      // Check for saved theme
+      const savedTheme = localStorage.getItem('postTheme');
+      if (savedTheme && themes[savedTheme]) {
+        const theme = themes[savedTheme];
+        document.documentElement.style.setProperty('--primary-color', theme.primary);
+        document.documentElement.style.setProperty('--secondary-color', theme.secondary);
+        document.documentElement.style.setProperty('--accent-color', theme.accent);
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', addThemeSelector);
+    */
+  </script>
+</body>
+</html>
