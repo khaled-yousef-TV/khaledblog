@@ -1,5 +1,4 @@
 site: Foodioso
-
 url: https://www.foodioso.com
 baseurl: 
 
@@ -15,24 +14,24 @@ collections:
   #   permalink: /project/:slug
 
 defaults:
-  -
+  - 
     scope:
       path: ""
     values:
       layout: "default"
-  -
+  - 
     scope:
       path: ""
       type: "pages"
     values:
       layout: "page"
-  -
+  - 
     scope:
       path: ""
       type: "posts"
     values:
       layout: "post"
-  # -
+  # - 
   #   scope:
   #     path: ""
   #     type: "projects"
@@ -40,17 +39,17 @@ defaults:
   #     layout: "project"
 
 markdown: kramdown
-
 kramdown:
   input: GFM
   syntax_highlighter: rouge
-  
+
 sass:
   style: compressed
 
 plugins:
   - jekyll-paginate
   - jekyll-sitemap
+  - jekyll-seo-tag
 
 paginate: 10
 paginate_path: "/blog/page:num/"

@@ -7,4 +7,5 @@ group :jekyll_plugins do
   gem 'jekyll-sitemap'
   gem 'rexml'
   gem 'webrick'
+  gem 'jekyll-seo-tag'
 end
